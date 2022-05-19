@@ -16,9 +16,14 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+using Discord;
+using Discord.Interactions;
+using Discord.WebSocket;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using RurouniJones.Custodian.Configuration.Util;
+using RurouniJones.Custodian.Core.Discord;
+using RurouniJones.Custodian.Core.Discord.Interactions;
 using Serilog;
 using System.Runtime.InteropServices;
 
@@ -51,10 +56,22 @@ namespace RurouniJones.Custodian.Service
                     .ConfigureServices(services =>
                     {
                         services.AddHostedService<Worker>();
-                        services.AddTransient<Core.Discord.Client>();
+                        services.AddSingleton(x => {
+                            var SocketConfig = new DiscordSocketConfig
+                            {
+                                LogLevel = LogSeverity.Debug,
+                                GatewayIntents = GatewayIntents.AllUnprivileged
+                            };
+                            return new DiscordSocketClient(SocketConfig);
+                        });
+                        services.AddSingleton(x => new InteractionService(x.GetRequiredService<DiscordSocketClient>()));
+                        services.AddSingleton<InteractionHandler>();
+                        services.AddSingleton<Client>();
                         services.AddOpenTelemetryTracing((builder) => builder
                             .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("Custodian"))
                             .AddSource(nameof(Worker))
+                            .AddSource(nameof(InteractionHandler))
+                            .AddSource(nameof(OutText))
                             .AddConsoleExporter()
                             .SetSampler(new AlwaysOnSampler())
                         );
