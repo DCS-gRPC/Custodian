@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<AssemblyName>$(MSBuildProjectName)</AssemblyName>
+		<RootNamespace>RurouniJones.Custodian.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
+		<PackageId>$(AssemblyName)</PackageId>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="6.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
+		<PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="6.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Options.DataAnnotations" Version="6.0.0" />
+		<PackageReference Include="DataAnnotationsValidatorNetStandard" Version="1.0.3" />
+		<PackageReference Include="NetEscapades.Configuration.Yaml" Version="2.1.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Update="configuration.yaml">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
+	
+</Project>

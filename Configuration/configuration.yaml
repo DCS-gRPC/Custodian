@@ -1,0 +1,50 @@
+﻿---
+# The following setup is for the logging system
+Serilog:
+  Using:
+  MinimumLevel: 
+    Default: Information
+  Override: 
+    Microsoft: Warning
+    System: Warning
+  Enrich:
+    - FromLogContext
+    - WithProcessId
+    - WithThreadId
+  WriteTo:
+    -
+      Name: Console
+    -
+      Name: File
+      Args:
+        path: logs/Custodian.json
+        formatter: Serilog.Formatting.Json.JsonFormatter, Serilog
+    -
+      Name: Seq
+      Args:
+        serverUrl: http://localhost:5341
+# The following setup is for the application itself
+Application:
+  # The full name of your organisation. Used in certain logging and output
+  Name: Example Group
+  Discord:
+    # The ID of your Discord Guild (Server). Must be a 17 or 18 digit number
+    GuildId: 123456789012345678
+    # The 59 or 70 character security token for your Discord bot
+    Token: OTg2ODA8Njk5NTI3NzgyNDAw.ADfi-f.oRKJVdqjvtpo1iXR57iHkIrpLgyr1wTnH0jfzA
+  # A list of all the GameServers that Custodian will connect to.
+  # This is a list where each "-" signifies a new GameServer
+  # Every GameServer needs to have all the fields populated or things will go wrong.
+  GameServers:
+    -
+      # The full name of your server. Used in certain logging and output
+      Name: Example Server
+      # The short name of your server. This is used in various places and needs to be unique across your servers.
+      # Try to keep it to 3 or 4 letters. No spaces.
+      ShortName: EXS
+      # Set these values so the application can connect to your DCS-gRPC instance
+      Rpc:
+        # The IP address DCS-gRPC is listening on. You can also use a hostname
+        Host: exs.example.com
+        # This is the default port
+        Port: 50051
