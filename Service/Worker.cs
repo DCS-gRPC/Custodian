@@ -27,15 +27,19 @@ namespace RurouniJones.Custodian.Service
 
         private readonly ILogger<Worker> _logger;
         private readonly Configuration.Application _configuration;
+        private readonly Core.Discord.Client _discordClient;
 
-        public Worker(ILogger<Worker> logger, IOptions<Configuration.Application> configuration)
+        public Worker(ILogger<Worker> logger, IOptions<Configuration.Application> configuration, Core.Discord.Client discordClient)
         {
             _logger = logger;
             _configuration = configuration.Value;
+            _discordClient = discordClient;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            _ = _discordClient.StartAsync(stoppingToken);
+
             while (!stoppingToken.IsCancellationRequested)
             {
                 using var activity = Source.StartActivity(nameof(Worker));

@@ -20,6 +20,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Update="configuration.development.yaml">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
 	  <None Update="configuration.yaml">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>

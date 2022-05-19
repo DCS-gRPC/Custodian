@@ -51,6 +51,7 @@ namespace RurouniJones.Custodian.Service
                     .ConfigureServices(services =>
                     {
                         services.AddHostedService<Worker>();
+                        services.AddTransient<Core.Discord.Client>();
                         services.AddOpenTelemetryTracing((builder) => builder
                             .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("Custodian"))
                             .AddSource(nameof(Worker))
