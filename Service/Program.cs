@@ -22,8 +22,6 @@ using Discord.WebSocket;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using RurouniJones.Custodian.Configuration.Util;
-using RurouniJones.Custodian.Core.Discord;
-using RurouniJones.Custodian.Core.Discord.Interactions;
 using Serilog;
 using System.Runtime.InteropServices;
 
@@ -65,13 +63,16 @@ namespace RurouniJones.Custodian.Service
                             return new DiscordSocketClient(SocketConfig);
                         });
                         services.AddSingleton(x => new InteractionService(x.GetRequiredService<DiscordSocketClient>()));
-                        services.AddSingleton<InteractionHandler>();
-                        services.AddSingleton<Client>();
+                        services.AddSingleton<Core.Discord.InteractionHandler>();
+                        services.AddSingleton<Core.Discord.Client>();
+                        services.AddSingleton<Core.Dcs.Client>();
+                        services.AddTransient<Core.Dcs.MessageService>();
+                        services.AddTransient<Core.Dcs.PlayerService>();
                         services.AddOpenTelemetryTracing((builder) => builder
                             .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("Custodian"))
                             .AddSource(nameof(Worker))
-                            .AddSource(nameof(InteractionHandler))
-                            .AddSource(nameof(OutText))
+                            .AddSource(nameof(Core.Discord.InteractionHandler))
+                            .AddSource(nameof(Core.Discord.Interactions.OutTextInteraction))
                             .AddConsoleExporter()
                             .SetSampler(new AlwaysOnSampler())
                         );

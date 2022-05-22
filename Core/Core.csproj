@@ -18,8 +18,4 @@
 	  <ProjectReference Include="..\Configuration\Configuration.csproj" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="Discord\AutoCompleters\" />
-	</ItemGroup>
-
 </Project>

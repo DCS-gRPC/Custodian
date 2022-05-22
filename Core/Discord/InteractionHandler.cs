@@ -17,7 +17,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 using System.Diagnostics;
-using Discord;
 using Discord.Interactions;
 using Discord.WebSocket;
 using Microsoft.Extensions.Logging;
@@ -44,25 +43,33 @@ namespace RurouniJones.Custodian.Core.Discord
 
         public async Task InitializeAsync(ulong guildId)
         {
-            await _interactionService.AddModuleAsync<OutText>(_serviceProvider);
+            await _interactionService.AddModuleAsync<OutTextInteraction>(_serviceProvider);
             await _interactionService.RegisterCommandsToGuildAsync(guildId);
             _logger.LogInformation("Registered {count} slash commands", _interactionService.SlashCommands.Count);
-
+            
             _client.InteractionCreated += HandleInteraction;
-            _interactionService.SlashCommandExecuted += SlashCommandExecuted;
         }
 
         private async Task HandleInteraction(SocketInteraction interaction)
         {
             using var activity = Source.StartActivity(nameof(InteractionHandler), ActivityKind.Server);
-            var Context = new SocketInteractionContext(_client, interaction);
-            var command = (SocketSlashCommand) interaction;
-            await _interactionService.ExecuteCommandAsync(Context, _serviceProvider);
-        }
 
-        private async Task SlashCommandExecuted(SlashCommandInfo info, IInteractionContext context, IResult result)
-        {
-            await Task.CompletedTask;
+            var Context = new SocketInteractionContext(_client, interaction);
+
+            SocketInteraction command;
+            switch (interaction)
+            {
+                case SocketAutocompleteInteraction:
+                    command = (SocketAutocompleteInteraction) interaction;
+                    break;
+                case SocketSlashCommand:
+                    command = (SocketSlashCommand) interaction;
+                    break;
+                default:
+                    throw new Exception("Unexpected interaction");
+            }
+
+            await _interactionService.ExecuteCommandAsync(Context, _serviceProvider);
         }
     }
 }
