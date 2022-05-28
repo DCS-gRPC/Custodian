@@ -35,7 +35,7 @@ namespace RurouniJones.Custodian.Core.Dcs
             _client = client;
         }
 
-        public async Task<List<Player>> GetPlayersOnServer(string server)
+        public async Task<List<Player>> GetPlayersOnServerAsync(string server)
         {
             var channel = _client.GetServerChannel(server);
             if (channel == null) return new List<Player>();
@@ -47,12 +47,31 @@ namespace RurouniJones.Custodian.Core.Dcs
             return players.Players.Select(x => ToPlayer(x)).ToList();
         }
 
+
+        public async Task<Player?> KickPlayerAsync(string server, string playerName, string reason)
+        {
+            var player = (await GetPlayersOnServerAsync(server)).FirstOrDefault(x => x.Name == playerName);
+
+            var channel = _client.GetServerChannel(server);
+            if (channel == null) return null;
+
+            var service = new NetService.NetServiceClient(channel);
+
+            var players = await service.KickPlayerAsync(new KickPlayerRequest()
+            {
+                Id = player.Id,
+                Message = reason
+            });
+
+            return player;
+        }
+
         private static Player ToPlayer(GetPlayerInfo protoPlayer)
         {
             return new Player(protoPlayer.Name, protoPlayer.Id, protoPlayer.Ucid);
         }
 
-        public record struct Player
+        public readonly record struct Player
         {
             public string Name { get; init; }
             public uint Id { get; init; }

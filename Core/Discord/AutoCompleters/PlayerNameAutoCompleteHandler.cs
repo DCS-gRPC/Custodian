@@ -55,7 +55,7 @@ namespace RurouniJones.Custodian.Core.Discord.AutoCompleters
                 return AutocompletionResult.FromSuccess();
             }
 
-            var players = await _playerService.GetPlayersOnServer(server);
+            var players = await _playerService.GetPlayersOnServerAsync(server);
             players.RemoveAll(x => x.Id == 1); // 1 is always the server "player". Never an actual player.
 
             List <AutocompleteResult> results = new();

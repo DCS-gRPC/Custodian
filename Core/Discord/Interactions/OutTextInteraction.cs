@@ -21,6 +21,7 @@ using Discord.Interactions;
 using Microsoft.Extensions.Logging;
 using RurouniJones.Custodian.Core.Dcs;
 using RurouniJones.Custodian.Core.Discord.AutoCompleters;
+using static RurouniJones.Custodian.Core.Enumerations;
 
 namespace RurouniJones.Custodian.Core.Discord.Interactions
 {
@@ -32,20 +33,13 @@ namespace RurouniJones.Custodian.Core.Discord.Interactions
         private readonly ILogger<OutTextInteraction> _logger;
         private readonly MessageService _messageService;
 
-        public enum Coalition
-        {
-            Bluefor = 3,
-            RedFor = 2,
-            Neutral = 1
-        }
-
         public OutTextInteraction(ILogger<OutTextInteraction> logger, MessageService messageService)
         {
             _logger = logger;
             _messageService = messageService;
         }
 
-        [SlashCommand("announce", "Display to everyone on all servers")]
+        [SlashCommand("announce", "Display to everyone on all DCS servers")]
         public async Task AnnounceSubCommand(
             [Summary(description: "Message to display")] string message,
             [Summary(description: "Time in seconds to display the message. Default 15")] uint displayTime = 15)
@@ -57,7 +51,7 @@ namespace RurouniJones.Custodian.Core.Discord.Interactions
             await RespondAsync($"Message sent");
         }
 
-        [SlashCommand("all", "Display to everyone on a server")]
+        [SlashCommand("all", "Display to everyone on a DCS server")]
         public async Task AllSubCommand(
             [Summary(description: "Name of the server"), Autocomplete(typeof(GameServerAutoCompleteHandler))] string server,
             [Summary(description: "Message to display")] string message,
@@ -70,7 +64,7 @@ namespace RurouniJones.Custodian.Core.Discord.Interactions
             await RespondAsync($"Message sent");
         }           
 
-        [SlashCommand("coalition", "Display to a coalition on a server")]
+        [SlashCommand("coalition", "Display to a coalition on a DCS server")]
         public async Task CoalitionSubCommand(
             [Summary(description: "Name of the server"), Autocomplete(typeof(GameServerAutoCompleteHandler))] string server,
             [Summary(description: "Coalition to send the message to")] Coalition coalition,
@@ -85,7 +79,7 @@ namespace RurouniJones.Custodian.Core.Discord.Interactions
             await RespondAsync($"Message sent");
         }
 
-        [SlashCommand("player", "Display to a player on a server")]
+        [SlashCommand("player", "Display to a player on a DCS server")]
         public async Task PlayerSubCommand(
             [Summary(description: "Name of the server"), Autocomplete(typeof(GameServerAutoCompleteHandler))] string server,
             [Summary(description: "Player to send the message to"), Autocomplete(typeof(PlayerNameAutoCompleteHandler))] string playerName,
