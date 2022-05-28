@@ -84,7 +84,7 @@ namespace RurouniJones.Custodian.Core.Discord.Interactions
             [Summary(description: "Name of the server"), Autocomplete(typeof(GameServerAutoCompleteHandler))] string server,
             [Summary(description: "Player to send the message to"), Autocomplete(typeof(PlayerNameAutoCompleteHandler))] string playerName,
             [Summary(description: "Message to display")] string message,
-            [Summary(description: "Time in seconds to display the message. Default 15")] uint displayTime = 15)
+            [Summary(description: "Time in seconds to display the message. Default: 15")] uint displayTime = 15)
         {
             using var activity = Source.StartActivity(nameof(OutTextInteraction));
             SetCommonTelemetryTags(activity, "player", server, message, displayTime);

@@ -17,7 +17,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System.Diagnostics;
 using Microsoft.Extensions.Logging;
+using RurouniJones.Dcs.Grpc.V0.Hook;
 using RurouniJones.Dcs.Grpc.V0.Net;
+using static RurouniJones.Custodian.Core.Enumerations;
 using static RurouniJones.Dcs.Grpc.V0.Net.GetPlayersResponse.Types;
 
 namespace RurouniJones.Custodian.Core.Dcs
@@ -47,7 +49,6 @@ namespace RurouniJones.Custodian.Core.Dcs
             return players.Players.Select(x => ToPlayer(x)).ToList();
         }
 
-
         public async Task<Player?> KickPlayerAsync(string server, string playerName, string reason)
         {
             var player = (await GetPlayersOnServerAsync(server)).FirstOrDefault(x => x.Name == playerName);
@@ -57,7 +58,7 @@ namespace RurouniJones.Custodian.Core.Dcs
 
             var service = new NetService.NetServiceClient(channel);
 
-            var players = await service.KickPlayerAsync(new KickPlayerRequest()
+            await service.KickPlayerAsync(new KickPlayerRequest()
             {
                 Id = player.Id,
                 Message = reason
@@ -66,9 +67,74 @@ namespace RurouniJones.Custodian.Core.Dcs
             return player;
         }
 
+        public async Task<Player?> BanPlayerAsync(string server, string playerName, string reason, int period, BanPeriodUnit periodUnit)
+        {
+            var player = (await GetPlayersOnServerAsync(server)).FirstOrDefault(x => x.Name == playerName);
+
+            var channel = _client.GetServerChannel(server);
+            if (channel == null) return null;
+
+            var service = new HookService.HookServiceClient(channel);
+
+            await service.BanPlayerAsync(new BanPlayerRequest()
+            {
+                Id = player.Id,
+                Period = (uint) ToSeconds(period, periodUnit),
+                Reason = reason
+            });
+
+            return player;
+        }
+
+        public async Task<PlayerBan?> UnbanPlayerAsync(string server, string playerName)
+        {
+
+            var player = (await GetBannedPlayersOnServerAsync(server)).FirstOrDefault(x => x.Name == playerName);
+
+            var channel = _client.GetServerChannel(server);
+            if (channel == null) return null;
+
+            var service = new HookService.HookServiceClient(channel);
+
+            var players = await service.GetBannedPlayersAsync(new GetBannedPlayersRequest());
+
+            await service.UnbanPlayerAsync(new UnbanPlayerRequest()
+            {
+                Ucid = player.Ucid
+            });
+
+            return player;
+        }
+
+        public async Task<List<PlayerBan>> GetBannedPlayersOnServerAsync(string server)
+        {
+            var channel = _client.GetServerChannel(server);
+            if (channel == null) return new List<PlayerBan>();
+
+            var service = new HookService.HookServiceClient(channel);
+
+            var players = await service.GetBannedPlayersAsync(new GetBannedPlayersRequest {});
+
+            return players.Bans.Select(x => ToPlayerBan(x)).ToList();
+        }
+
+        private static int ToSeconds(int period, BanPeriodUnit periodUnit) => periodUnit switch
+        {
+            BanPeriodUnit.Minutes => (int) new TimeSpan(0, 0, period, 0).TotalSeconds,
+            BanPeriodUnit.Hours => (int) new TimeSpan(0, period, 0, 0).TotalSeconds,
+            BanPeriodUnit.Days => (int) new TimeSpan(period, 0, 0, 0).TotalSeconds,
+            _ => (int) new TimeSpan(90, 0, 0, 0).TotalSeconds,
+        };
+
         private static Player ToPlayer(GetPlayerInfo protoPlayer)
         {
             return new Player(protoPlayer.Name, protoPlayer.Id, protoPlayer.Ucid);
+        }
+
+        private static PlayerBan ToPlayerBan(BanDetails banDetails)
+        {
+            return new PlayerBan(banDetails.PlayerName, banDetails.Ucid, banDetails.IpAddress,
+                banDetails.BannedFrom, banDetails.BannedUntil, banDetails.Reason);
         }
 
         public readonly record struct Player
@@ -82,6 +148,26 @@ namespace RurouniJones.Custodian.Core.Dcs
                 Name = name;
                 Id = id;
                 Ucid = ucid;
+            }
+        }
+
+        public readonly record struct PlayerBan
+        {
+            public string Name { get; init; }
+            public string Ucid { get; init; }
+            public string IpAddress { get; init; }
+            public ulong BannedFrom { get; init; }
+            public ulong BannedUntil { get; init; }
+            public string Reason { get; init;}
+
+            public PlayerBan(string name, string ucid, string ipAddress, ulong bannedFrom, ulong bannedUntil, string reason)
+            {
+                Name = name;
+                Ucid = ucid;
+                IpAddress = ipAddress;
+                BannedFrom = bannedFrom;
+                BannedUntil = bannedUntil;
+                Reason = reason;
             }
         }
     }

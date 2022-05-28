@@ -26,5 +26,12 @@ namespace RurouniJones.Custodian.Core
             RedFor = 2,
             Neutral = 1
         }
+
+        public enum BanPeriodUnit
+        {
+            Minutes,
+            Hours,
+            Days
+        }
     }
 }

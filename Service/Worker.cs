@@ -39,14 +39,7 @@ namespace RurouniJones.Custodian.Service
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             _ = _discordClient.StartAsync(stoppingToken);
-
-            while (!stoppingToken.IsCancellationRequested)
-            {
-                //using var activity = Source.StartActivity(nameof(Worker));
-                //activity?.AddTag("TagKey", "TagValue");
-                //_logger.LogInformation("{name} Worker running at: {time}", _configuration.Name, DateTimeOffset.Now);
-                await Task.Delay(1000, stoppingToken);
-            }
+            await Task.Delay(Timeout.Infinite, stoppingToken);
         }
     }
 }
