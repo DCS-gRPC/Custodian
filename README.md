@@ -21,8 +21,8 @@ guide.
 Make sure to give the bot `Slash Command` permissions when inviting it into your
 Discord.
 
-Once the bot has been invited make sure to restrict permissions regarding who
-is allowed to run the commands and in what channels. This can be done from
+**Once the bot has been invited make sure to restrict permissions regarding who
+is allowed to run the commands and in what channels**. This can be done from
 within the administration menu for your Discord server in the `Integrations`
 tab.
 
@@ -31,7 +31,7 @@ tab.
 1. Download Custodian from URL and extract into a folder of your choice.
 2. Modify the `configuration.yaml` file to suit your installation. The file
    has comments that explain the various options.
-3. Run the bot using the `Service.exe` or optionally run as a Windows Service
+3. Run the bot using the `Custodian.exe` or optionally run as a Windows Service
    (See below). For the initial runs we recommend not running as a service
    to make sure everything is setup correctly.
 
@@ -41,5 +41,5 @@ Run the following command in a Powershell window with administrator
 permissions, making sure to change the path to point to the correct location.
 
 ```
-New-Service -Name Custodian -BinaryPathName C:\YOUR\PATH\TO\CUSTODIAN\Service.exe -Description "Discord Bot for DCS Administration" -DisplayName "Custodian" -StartupType Automatic
+New-Service -Name Custodian -BinaryPathName C:\YOUR\PATH\TO\Custodian.exe -Description "Discord Bot for DCS Administration" -DisplayName "Custodian" -StartupType Automatic
 ```

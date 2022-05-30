@@ -5,10 +5,26 @@
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<UserSecretsId>dotnet-Service-591B29EE-15D7-4562-B8A8-0B4DF728802B</UserSecretsId>
-		<AssemblyName>$(MSBuildProjectName)</AssemblyName>
+		<AssemblyName>Custodian</AssemblyName>
 		<RootNamespace>RurouniJones.Custodian.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
 		<PackageId>$(AssemblyName)</PackageId>
+		<Company>$(Authors)</Company>
+		<Product>Custodian</Product>
+		<Description>A Discord bot that allows DCS server administration via slash commands</Description>
+		<Authors>Jeffrey Jones</Authors>
+		<Copyright>Copyright Jeffrey Jones 2022</Copyright>
+		<PackageProjectUrl>https://github.com/DCS-gRPC/Custodian</PackageProjectUrl>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<RepositoryUrl>https://github.com/DCS-gRPC/Custodian</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
 	</PropertyGroup>
+
+	<ItemGroup>
+	  <None Include="..\README.md">
+	    <Pack>True</Pack>
+	    <PackagePath>\</PackagePath>
+	  </None>
+	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="NetEscapades.Configuration.Yaml" Version="2.1.0" />
