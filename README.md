@@ -10,6 +10,10 @@ all of the following from within Discord.
 * Ban and unban players using the built-in DCS ban system (No SLMod support
   as yet) as well as list banned players
 
+The connection with the DCS server is handled using `DCS-gRPC` which allows
+clients written in any gRPC suported language to interact with a running DCS
+server.
+
 # Installation
 
 ## Create Discord Bot account
