@@ -6,6 +6,8 @@ all of the following from within Discord.
 
 * Display text to players on servers. Including by coalition or direct to a
   specific player
+* Send chat messages to players on servers. Including by coalition or direct to a
+  specific player
 * Kick players from servers
 * Ban and unban players using the built-in DCS ban system (No SLMod support
   as yet) as well as list banned players
@@ -15,6 +17,12 @@ clients written in any gRPC suported language to interact with a running DCS
 server.
 
 # Installation
+
+## Install DCS-gRPC
+
+Make sure that [DCS-gRPC](https://github.com/DCS-gRPC/rust-server/releases) is
+installed. This version of Custodian has been tested against DCS-gRPC version
+0.7.X.
 
 ## Create Discord Bot account
 
