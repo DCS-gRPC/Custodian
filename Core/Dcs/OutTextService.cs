@@ -101,6 +101,7 @@ namespace RurouniJones.Custodian.Core.Dcs
             await service.OutTextForUnitAsync(new OutTextForUnitRequest()
             {
                 Text = message,
+                UnitId = (uint) unitId,
                 DisplayTime = (int) displayTime,
                 ClearView = true,
             });
