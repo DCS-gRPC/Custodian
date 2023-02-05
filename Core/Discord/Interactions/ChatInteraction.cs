@@ -25,42 +25,40 @@ using static RurouniJones.Custodian.Core.Enumerations;
 
 namespace RurouniJones.Custodian.Core.Discord.Interactions
 {
-    [Group("out-text", "Display a DCS OutText message box to players")]
-    public class OutTextInteraction : InteractionModuleBase<SocketInteractionContext>
+    [Group("chat", "Display a chat message in the DCS chat")]
+    public class ChatInteraction : InteractionModuleBase<SocketInteractionContext>
     {
-        private static readonly ActivitySource Source = new(nameof(OutTextInteraction));
+        private static readonly ActivitySource Source = new(nameof(ChatInteraction));
 
-        private readonly ILogger<OutTextInteraction> _logger;
-        private readonly OutTextService _messageService;
+        private readonly ILogger<ChatInteraction> _logger;
+        private readonly ChatService _chatService;
 
-        public OutTextInteraction(ILogger<OutTextInteraction> logger, OutTextService messageService)
+        public ChatInteraction(ILogger<ChatInteraction> logger, ChatService chatService)
         {
             _logger = logger;
-            _messageService = messageService;
+            _chatService = chatService;
         }
 
         [SlashCommand("announce", "Display to everyone on all DCS servers")]
         public async Task AnnounceSubCommand(
-            [Summary(description: "Message to display")] string message,
-            [Summary(description: "Time in seconds to display the message. Default 15")] uint displayTime = 15)
+            [Summary(description: "Message to display")] string message)
         {
-            using var activity = Source.StartActivity(nameof(OutTextInteraction));
-            SetCommonTelemetryTags(activity, "announce", null, message, displayTime);
+            using var activity = Source.StartActivity(nameof(ChatInteraction));
+            SetCommonTelemetryTags(activity, "announce", null, message);
 
-            await _messageService.AnnounceToAllServersAsync(message, displayTime);
+            await _chatService.AnnounceToAllServersAsync(message);
             await RespondAsync($"Message sent");
         }
 
         [SlashCommand("all", "Display to everyone on a DCS server")]
         public async Task AllSubCommand(
             [Summary(description: "Name of the server"), Autocomplete(typeof(GameServerAutoCompleteHandler))] string server,
-            [Summary(description: "Message to display")] string message,
-            [Summary(description: "Time in seconds to display the message. Default 15")] uint displayTime = 15)
+            [Summary(description: "Message to display")] string message)
         {
-            using var activity = Source.StartActivity(nameof(OutTextInteraction));
-            SetCommonTelemetryTags(activity, "all", server, message, displayTime);
+            using var activity = Source.StartActivity(nameof(ChatInteraction));
+            SetCommonTelemetryTags(activity, "all", server, message);
 
-            await _messageService.MessageToAllPlayersOnServerAsync(server, message, displayTime);
+            await _chatService.ChatToAllPlayersOnServerAsync(server, message);
             await RespondAsync($"Message sent");
         }           
 
@@ -68,14 +66,13 @@ namespace RurouniJones.Custodian.Core.Discord.Interactions
         public async Task CoalitionSubCommand(
             [Summary(description: "Name of the server"), Autocomplete(typeof(GameServerAutoCompleteHandler))] string server,
             [Summary(description: "Coalition to send the message to")] Coalition coalition,
-            [Summary(description: "Message to display")] string message,
-            [Summary(description: "Time in seconds to display the message. Default 15")] uint displayTime = 15)
+            [Summary(description: "Message to display")] string message)
         {
-            using var activity = Source.StartActivity(nameof(OutTextInteraction));
-            SetCommonTelemetryTags(activity, "coalition", server, message, displayTime);
+            using var activity = Source.StartActivity(nameof(ChatInteraction));
+            SetCommonTelemetryTags(activity, "coalition", server, message);
             activity?.AddTag("Coalition", coalition.ToString());
 
-            await _messageService.MessageToCoalitionOnServerAsync(server, (uint) coalition , message, displayTime);
+            await _chatService.ChatToCoalitionOnServerAsync(server, (uint) coalition , message);
             await RespondAsync($"Message sent");
         }
 
@@ -83,25 +80,23 @@ namespace RurouniJones.Custodian.Core.Discord.Interactions
         public async Task PlayerSubCommand(
             [Summary(description: "Name of the server"), Autocomplete(typeof(GameServerAutoCompleteHandler))] string server,
             [Summary(description: "Player to send the message to"), Autocomplete(typeof(PlayerNameAutoCompleteHandler))] string playerName,
-            [Summary(description: "Message to display")] string message,
-            [Summary(description: "Time in seconds to display the message. Default: 15")] uint displayTime = 15)
+            [Summary(description: "Message to display")] string message)
         {
-            using var activity = Source.StartActivity(nameof(OutTextInteraction));
-            SetCommonTelemetryTags(activity, "player", server, message, displayTime);
+            using var activity = Source.StartActivity(nameof(ChatInteraction));
+            SetCommonTelemetryTags(activity, "player", server, message);
             activity?.AddTag("PlayerName", playerName);
 
-            await _messageService.MessageToPlayerOnServerAsync(server, playerName, message, displayTime);
+            await _chatService.ChatToPlayerOnServerAsync(server, playerName, message);
             await RespondAsync($"Message sent");
         }
 
-        private static void SetCommonTelemetryTags(Activity? activity, string subCommand, string? server, string message, uint displayTime)
+        private static void SetCommonTelemetryTags(Activity? activity, string subCommand, string? server, string message)
         {
-            activity?.AddTag("Command", "out-text");
+            activity?.AddTag("Command", "chat");
             activity?.AddTag("SubCommand", subCommand);
             if (server != null)
                 activity?.AddTag("Server", server);
             activity?.AddTag("Message", message);
-            activity?.AddTag("DisplayTime", displayTime);
         }
     }
 }

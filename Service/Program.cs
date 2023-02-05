@@ -66,13 +66,14 @@ namespace RurouniJones.Custodian.Service
                         services.AddSingleton<Core.Discord.InteractionHandler>();
                         services.AddSingleton<Core.Discord.Client>();
                         services.AddSingleton<Core.Dcs.Client>();
-                        services.AddTransient<Core.Dcs.MessageService>();
+                        services.AddTransient<Core.Dcs.ChatService>();
+                        services.AddTransient<Core.Dcs.OutTextService>();
                         services.AddTransient<Core.Dcs.PlayerService>();
                         services.AddOpenTelemetryTracing((builder) => builder
                             .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("Custodian"))
                             .AddSource(nameof(Worker))
                             .AddSource(nameof(Core.Discord.InteractionHandler))
-                            .AddSource(nameof(Core.Discord.Interactions.OutTextInteraction))
+                            .AddSource(nameof(Core.Discord.Interactions.ChatInteraction))
                             .AddConsoleExporter()
                             .SetSampler(new AlwaysOnSampler())
                         );

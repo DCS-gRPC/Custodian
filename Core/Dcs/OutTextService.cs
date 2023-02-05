@@ -23,14 +23,14 @@ using RurouniJones.Dcs.Grpc.V0.Trigger;
 
 namespace RurouniJones.Custodian.Core.Dcs
 {
-    public sealed class MessageService
+    public sealed class OutTextService
     {
         private static readonly ActivitySource Source = new(nameof(Client));
 
         private readonly ILogger<Client> _logger;
         private readonly Client _client;
 
-        public MessageService(ILogger<Client> logger, Client client)
+        public OutTextService(ILogger<Client> logger, Client client)
         {
             _logger = logger;
             _client = client;
