@@ -67,6 +67,7 @@ namespace RurouniJones.Custodian.Service
                         services.AddSingleton<Core.Discord.Client>();
                         services.AddSingleton<Core.Dcs.Client>();
                         services.AddTransient<Core.Dcs.ChatService>();
+                        services.AddTransient<Core.Dcs.EvalService>();
                         services.AddTransient<Core.Dcs.OutTextService>();
                         services.AddTransient<Core.Dcs.PlayerService>();
                         services.AddTransient<Core.Dcs.TransmitService>();

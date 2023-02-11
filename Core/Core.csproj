@@ -18,4 +18,10 @@
 	  <ProjectReference Include="..\Configuration\Configuration.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <None Update="Snippets\ReturnTrue.lua">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
+
 </Project>
