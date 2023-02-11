@@ -69,6 +69,7 @@ namespace RurouniJones.Custodian.Service
                         services.AddTransient<Core.Dcs.ChatService>();
                         services.AddTransient<Core.Dcs.OutTextService>();
                         services.AddTransient<Core.Dcs.PlayerService>();
+                        services.AddTransient<Core.Dcs.TransmitService>();
                         services.AddOpenTelemetryTracing((builder) => builder
                             .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("Custodian"))
                             .AddSource(nameof(Worker))

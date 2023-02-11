@@ -46,6 +46,7 @@ namespace RurouniJones.Custodian.Core.Discord
             await _interactionService.AddModuleAsync<ChatInteraction>(_serviceProvider);
             await _interactionService.AddModuleAsync<OutTextInteraction>(_serviceProvider);
             await _interactionService.AddModuleAsync<PlayerAdministrationInteraction>(_serviceProvider);
+            await _interactionService.AddModuleAsync<TransmitInteraction>(_serviceProvider);
             await _interactionService.RegisterCommandsToGuildAsync(guildId);
             _logger.LogInformation("Registered {count} slash commands", _interactionService.SlashCommands.Count);
             
