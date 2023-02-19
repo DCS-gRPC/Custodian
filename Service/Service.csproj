@@ -17,7 +17,10 @@
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<RepositoryUrl>https://github.com/DCS-gRPC/Custodian</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
-	</PropertyGroup>
+    <AssemblyVersion>2.0.0.0</AssemblyVersion>
+    <FileVersion>$(AssemblyVersion)</FileVersion>
+    <Version>$(AssemblyVersion)</Version>
+  </PropertyGroup>
 
 	<ItemGroup>
 	  <None Include="..\README.md">
